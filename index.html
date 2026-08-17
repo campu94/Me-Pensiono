@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Mis Finanzas</title>
+<meta name="theme-color" content="#0f172a" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <h1 id="view-title">Resumen</h1>
+</header>
+
+<main>
+
+  <!-- RESUMEN -->
+  <section id="view-resumen" class="view active">
+    <div class="summary-grid" id="resumen-grid">
+      <div class="empty-state">Cargando resumen…</div>
+    </div>
+    <div class="card">
+      <h2 class="section-title">Últimos movimientos</h2>
+      <div id="ultimos-movimientos"><div class="empty-state">Sin datos aún</div></div>
+    </div>
+  </section>
+
+  <!-- GASTOS -->
+  <section id="view-gastos" class="view">
+    <div class="card">
+      <h2 class="section-title">Nuevo gasto</h2>
+      <form id="form-gasto">
+        <div>
+          <label for="gasto-fecha">Fecha</label>
+          <input type="date" id="gasto-fecha" required />
+        </div>
+        <div>
+          <label for="gasto-concepto">Concepto</label>
+          <input type="text" id="gasto-concepto" placeholder="Ej. Supermercado" required />
+        </div>
+        <div>
+          <label for="gasto-descripcion">Descripción (opcional)</label>
+          <textarea id="gasto-descripcion" placeholder="Detalle adicional"></textarea>
+        </div>
+        <div>
+          <label for="gasto-categoria">Categoría</label>
+          <select id="gasto-categoria">
+            <option>Alimentación</option>
+            <option>Transporte</option>
+            <option>Vivienda</option>
+            <option>Servicios</option>
+            <option>Salud</option>
+            <option>Ocio</option>
+            <option>Educación</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="gasto-monto">Monto</label>
+          <input type="number" id="gasto-monto" min="0" step="0.01" required />
+        </div>
+        <button type="submit">Guardar gasto</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2 class="section-title">Gastos recientes</h2>
+      <div id="lista-gastos"><div class="empty-state">Sin datos aún</div></div>
+    </div>
+  </section>
+
+  <!-- INGRESOS -->
+  <section id="view-ingresos" class="view">
+    <div class="card">
+      <h2 class="section-title">Nuevo ingreso</h2>
+      <form id="form-ingreso">
+        <div>
+          <label for="ingreso-fecha">Fecha</label>
+          <input type="date" id="ingreso-fecha" required />
+        </div>
+        <div>
+          <label for="ingreso-concepto">Concepto</label>
+          <input type="text" id="ingreso-concepto" placeholder="Ej. Salario" required />
+        </div>
+        <div>
+          <label for="ingreso-descripcion">Descripción (opcional)</label>
+          <textarea id="ingreso-descripcion" placeholder="Detalle adicional"></textarea>
+        </div>
+        <div>
+          <label for="ingreso-monto">Monto</label>
+          <input type="number" id="ingreso-monto" min="0" step="0.01" required />
+        </div>
+        <button type="submit">Guardar ingreso</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2 class="section-title">Ingresos recientes</h2>
+      <div id="lista-ingresos"><div class="empty-state">Sin datos aún</div></div>
+    </div>
+  </section>
+
+  <!-- HIPOTECAS -->
+  <section id="view-hipotecas" class="view">
+    <div class="card">
+      <h2 class="section-title">Nueva hipoteca</h2>
+      <form id="form-hipoteca">
+        <div>
+          <label for="hip-nombre">Nombre</label>
+          <input type="text" id="hip-nombre" placeholder="Ej. Apartamento Laureles" required />
+        </div>
+        <div>
+          <label for="hip-entidad">Entidad</label>
+          <input type="text" id="hip-entidad" placeholder="Ej. Bancolombia" />
+        </div>
+        <div>
+          <label for="hip-monto">Monto original</label>
+          <input type="number" id="hip-monto" min="0" step="0.01" required />
+        </div>
+        <div>
+          <label for="hip-tasa">Tasa de interés anual (%)</label>
+          <input type="number" id="hip-tasa" min="0" step="0.01" />
+        </div>
+        <div>
+          <label for="hip-plazo">Plazo (meses)</label>
+          <input type="number" id="hip-plazo" min="0" step="1" />
+        </div>
+        <div>
+          <label for="hip-cuota">Cuota mensual</label>
+          <input type="number" id="hip-cuota" min="0" step="0.01" />
+        </div>
+        <div>
+          <label for="hip-fecha">Fecha de inicio</label>
+          <input type="date" id="hip-fecha" required />
+        </div>
+        <button type="submit">Guardar hipoteca</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Registrar pago / abono</h2>
+      <form id="form-pago-hipoteca">
+        <div>
+          <label for="pago-hipoteca">Hipoteca</label>
+          <select id="pago-hipoteca" required></select>
+        </div>
+        <div>
+          <label for="pago-fecha">Fecha</label>
+          <input type="date" id="pago-fecha" required />
+        </div>
+        <div>
+          <label for="pago-monto">Monto total del pago</label>
+          <input type="number" id="pago-monto" min="0" step="0.01" required />
+        </div>
+        <div>
+          <label for="pago-capital">Abono a capital</label>
+          <input type="number" id="pago-capital" min="0" step="0.01" required />
+        </div>
+        <div>
+          <label for="pago-interes">Abono a interés</label>
+          <input type="number" id="pago-interes" min="0" step="0.01" />
+        </div>
+        <button type="submit">Registrar pago</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Mis hipotecas</h2>
+      <div id="lista-hipotecas"><div class="empty-state">Sin datos aún</div></div>
+    </div>
+  </section>
+
+  <!-- INVERSIONES -->
+  <section id="view-inversiones" class="view">
+    <div class="card">
+      <h2 class="section-title">Nueva inversión</h2>
+      <form id="form-inversion">
+        <div>
+          <label for="inv-nombre">Nombre</label>
+          <input type="text" id="inv-nombre" placeholder="Ej. CDT Bancolombia" required />
+        </div>
+        <div>
+          <label for="inv-tipo">Tipo</label>
+          <select id="inv-tipo">
+            <option>CDT / Renta fija</option>
+            <option>Acciones</option>
+            <option>Fondo de inversión</option>
+            <option>Cripto</option>
+            <option>Fondo de pensión voluntario</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="inv-monto">Monto invertido</label>
+          <input type="number" id="inv-monto" min="0" step="0.01" required />
+        </div>
+        <div>
+          <label for="inv-fecha">Fecha de inversión</label>
+          <input type="date" id="inv-fecha" required />
+        </div>
+        <button type="submit">Guardar inversión</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Actualizar valor actual</h2>
+      <form id="form-valor-inversion">
+        <div>
+          <label for="valor-inversion">Inversión</label>
+          <select id="valor-inversion" required></select>
+        </div>
+        <div>
+          <label for="valor-actual">Nuevo valor actual</label>
+          <input type="number" id="valor-actual" min="0" step="0.01" required />
+        </div>
+        <button type="submit">Actualizar valor</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Mis inversiones</h2>
+      <div id="lista-inversiones"><div class="empty-state">Sin datos aún</div></div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="tabbar">
+  <button data-view="resumen" class="active"><span class="icon">📊</span>Resumen</button>
+  <button data-view="gastos"><span class="icon">💸</span>Gastos</button>
+  <button data-view="ingresos"><span class="icon">💰</span>Ingresos</button>
+  <button data-view="hipotecas"><span class="icon">🏠</span>Hipotecas</button>
+  <button data-view="inversiones"><span class="icon">📈</span>Inversiones</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
