@@ -206,13 +206,16 @@ document.getElementById('form-hipoteca').addEventListener('submit', async (e) =>
 document.getElementById('form-pago-hipoteca').addEventListener('submit', async (e) => {
   e.preventDefault();
   try {
-    await apiPost('addPagoHipoteca', {
+    const payload = {
       hipotecaId: document.getElementById('pago-hipoteca').value,
       fecha: document.getElementById('pago-fecha').value,
       montoPago: document.getElementById('pago-monto').value,
       abonoCapital: document.getElementById('pago-capital').value,
       abonoInteres: document.getElementById('pago-interes').value,
-    });
+    };
+    const abonoUVR = document.getElementById('pago-capital-uvr').value;
+    if (abonoUVR) payload.abonoCapitalUVR = abonoUVR;
+    await apiPost('addPagoHipoteca', payload);
     e.target.reset();
     document.getElementById('pago-fecha').value = todayISO();
     toast('Pago registrado');
@@ -222,11 +225,37 @@ document.getElementById('form-pago-hipoteca').addEventListener('submit', async (
   }
 });
 
+document.getElementById('form-uvr').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    const { actualizadas } = await apiPost('addCotizacionUVR', {
+      fecha: document.getElementById('uvr-fecha').value,
+      valorUVR: document.getElementById('uvr-valor').value,
+    });
+    e.target.reset();
+    document.getElementById('uvr-fecha').value = todayISO();
+    toast(`Cotización actualizada · ${actualizadas} hipoteca(s) recalculada(s)`);
+    loadHipotecas();
+  } catch (err) {
+    toast('Error: ' + err.message, true);
+  }
+});
+
 async function loadHipotecas() {
   const cont = document.getElementById('lista-hipotecas');
   const select = document.getElementById('pago-hipoteca');
+  const uvrInfo = document.getElementById('uvr-ultima');
   try {
-    const { data } = await apiGet('list', { sheet: 'hipotecas' });
+    const [{ data }, uvrRes] = await Promise.all([
+      apiGet('list', { sheet: 'hipotecas' }),
+      apiGet('list', { sheet: 'uvr' }),
+    ]);
+    const uvrHist = uvrRes.data;
+    const ultimaUVR = uvrHist.length ? uvrHist[uvrHist.length - 1] : null;
+    uvrInfo.textContent = ultimaUVR
+      ? `Última cotización: ${money(ultimaUVR['Valor UVR'])} (${formatDate(ultimaUVR.Fecha)})`
+      : 'Aún no has registrado ninguna cotización.';
+
     select.innerHTML = data.map((h) => `<option value="${h.ID}">${escapeHtml(h.Nombre)}</option>`).join('');
     cont.innerHTML = data.length
       ? data
@@ -234,12 +263,17 @@ async function loadHipotecas() {
             const original = Number(h['Monto Original']) || 1;
             const saldo = Number(h['Saldo Actual']);
             const pagadoPct = Math.max(0, Math.min(100, ((original - saldo) / original) * 100));
+            const saldoUVR = Number(h['Saldo Capital UVR']) || 0;
+            const uvrLine = saldoUVR
+              ? `<div class="hip-sub">Saldo en UVR: <strong style="color:var(--text)">${saldoUVR.toLocaleString('es-CO', { maximumFractionDigits: 4 })} UVR</strong></div>`
+              : '';
             return `
             <div class="hip-card">
               <div class="hip-title">${escapeHtml(h.Nombre)}</div>
               <div class="hip-sub">${escapeHtml(h.Entidad || '')} · Cuota ${money(h['Cuota Mensual'])} · ${pagadoPct.toFixed(0)}% pagado</div>
               <div class="bar"><div class="bar-fill" style="width:${pagadoPct}%"></div></div>
               <div class="hip-sub">Saldo actual: <strong style="color:var(--text)">${money(saldo)}</strong> de ${money(original)}</div>
+              ${uvrLine}
             </div>`;
           })
           .join('')
@@ -316,6 +350,7 @@ async function loadInversiones() {
 document.getElementById('gasto-fecha').value = todayISO();
 document.getElementById('ingreso-fecha').value = todayISO();
 document.getElementById('pago-fecha').value = todayISO();
+document.getElementById('uvr-fecha').value = todayISO();
 document.getElementById('inv-fecha').value = todayISO();
 
 if ('serviceWorker' in navigator) {
