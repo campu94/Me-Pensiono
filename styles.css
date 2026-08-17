@@ -88,6 +88,12 @@ main {
 .value.positive { color: var(--accent); }
 .value.negative { color: var(--danger); }
 
+.tile-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
 form {
   display: flex;
   flex-direction: column;

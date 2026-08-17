@@ -75,8 +75,13 @@ async function loadResumen() {
       <div class="summary-tile wide"><div class="label">Balance</div><div class="value ${balance >= 0 ? 'positive' : 'negative'}" style="font-size:1.5rem">${money(balance)}</div></div>
     `;
 
+    const deudaUVR = get('Deuda Hipotecaria UVR');
     patrimonioGrid.innerHTML = `
-      <div class="summary-tile"><div class="label">Deuda hipotecaria</div><div class="value negative">${money(get('Deuda Hipotecaria Total'))}</div></div>
+      <div class="summary-tile">
+        <div class="label">Deuda hipotecaria</div>
+        <div class="value negative">${money(get('Deuda Hipotecaria Total'))}</div>
+        ${deudaUVR ? `<div class="tile-sub">${deudaUVR.toLocaleString('es-CO', { maximumFractionDigits: 2 })} UVR</div>` : ''}
+      </div>
       <div class="summary-tile"><div class="label">Valor inversiones</div><div class="value positive">${money(get('Valor Total Inversiones'))}</div></div>
       <div class="summary-tile wide"><div class="label">Rendimiento inversiones</div><div class="value ${get('Rendimiento Inversiones') >= 0 ? 'positive' : 'negative'}">${money(get('Rendimiento Inversiones'))}</div></div>
       <div class="summary-tile wide"><div class="label">Patrimonio neto</div><div class="value ${patrimonio >= 0 ? 'positive' : 'negative'}" style="font-size:1.5rem">${money(patrimonio)}</div></div>

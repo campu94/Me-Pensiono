@@ -94,6 +94,7 @@ function buildResumenSheet_() {
     ['Monto Invertido (costo)', '=SUM(Inversiones!D2:D)'],
     ['Rendimiento Inversiones', '=B6-B7'],
     ['Patrimonio Neto (Balance + Inversiones - Deuda)', '=B4+B6-B5'],
+    ['Deuda Hipotecaria UVR', '=SUM(Hipotecas!K2:K)'],
   ];
   sh.getRange(2, 1, rows.length, 2).setValues(rows);
   sh.getRange(2, 1, rows.length, 1).setFontWeight('bold');
@@ -142,7 +143,7 @@ function doGet(e) {
   try {
     if (action === 'resumen') {
       const sh = getSs_().getSheetByName('Resumen');
-      const data = sh.getRange('A2:B9').getValues();
+      const data = sh.getRange('A2:B10').getValues();
       return jsonOut_({ ok: true, resumen: data.map(r => ({ label: r[0], value: r[1] })) });
     }
     if (action === 'list') {
