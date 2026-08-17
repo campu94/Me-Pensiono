@@ -61,23 +61,29 @@ function refreshView(name) {
 
 // ---- Resumen ----
 async function loadResumen() {
-  const grid = document.getElementById('resumen-grid');
+  const liquidezGrid = document.getElementById('liquidez-grid');
+  const patrimonioGrid = document.getElementById('patrimonio-grid');
   try {
     const { resumen } = await apiGet('resumen');
     const get = (label) => resumen.find((r) => r.label === label)?.value || 0;
     const balance = get('Balance (Ingresos - Gastos)');
     const patrimonio = get('Patrimonio Neto (Balance + Inversiones - Deuda)');
-    grid.innerHTML = `
+
+    liquidezGrid.innerHTML = `
       <div class="summary-tile"><div class="label">Ingresos</div><div class="value positive">${money(get('Total Ingresos'))}</div></div>
       <div class="summary-tile"><div class="label">Gastos</div><div class="value negative">${money(get('Total Gastos'))}</div></div>
-      <div class="summary-tile"><div class="label">Balance</div><div class="value ${balance >= 0 ? 'positive' : 'negative'}">${money(balance)}</div></div>
+      <div class="summary-tile wide"><div class="label">Balance</div><div class="value ${balance >= 0 ? 'positive' : 'negative'}" style="font-size:1.5rem">${money(balance)}</div></div>
+    `;
+
+    patrimonioGrid.innerHTML = `
       <div class="summary-tile"><div class="label">Deuda hipotecaria</div><div class="value negative">${money(get('Deuda Hipotecaria Total'))}</div></div>
       <div class="summary-tile"><div class="label">Valor inversiones</div><div class="value positive">${money(get('Valor Total Inversiones'))}</div></div>
-      <div class="summary-tile"><div class="label">Rendimiento</div><div class="value ${get('Rendimiento Inversiones') >= 0 ? 'positive' : 'negative'}">${money(get('Rendimiento Inversiones'))}</div></div>
+      <div class="summary-tile wide"><div class="label">Rendimiento inversiones</div><div class="value ${get('Rendimiento Inversiones') >= 0 ? 'positive' : 'negative'}">${money(get('Rendimiento Inversiones'))}</div></div>
       <div class="summary-tile wide"><div class="label">Patrimonio neto</div><div class="value ${patrimonio >= 0 ? 'positive' : 'negative'}" style="font-size:1.5rem">${money(patrimonio)}</div></div>
     `;
   } catch (err) {
-    grid.innerHTML = `<div class="empty-state">Error cargando resumen: ${err.message}</div>`;
+    liquidezGrid.innerHTML = `<div class="empty-state">Error cargando resumen: ${err.message}</div>`;
+    patrimonioGrid.innerHTML = '';
   }
 
   try {
