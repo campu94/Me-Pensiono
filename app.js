@@ -274,8 +274,14 @@ async function loadHipotecas() {
           .map((h) => {
             const original = Number(h['Monto Original']) || 1;
             const saldo = Number(h['Saldo Actual']);
-            const pagadoPct = Math.max(0, Math.min(100, ((original - saldo) / original) * 100));
+            const montoOriginalUVR = Number(h['Monto Original UVR']) || 0;
             const saldoUVR = Number(h['Saldo Capital UVR']) || 0;
+            // El % pagado se calcula sobre UVR cuando el crédito lleva ese
+            // seguimiento: en pesos el saldo puede subir por indexación
+            // aunque sí se esté abonando capital real.
+            const pagadoPct = montoOriginalUVR > 0
+              ? Math.max(0, Math.min(100, ((montoOriginalUVR - saldoUVR) / montoOriginalUVR) * 100))
+              : Math.max(0, Math.min(100, ((original - saldo) / original) * 100));
             const uvrLine = saldoUVR
               ? `<div class="hip-sub">Saldo en UVR: <strong style="color:var(--text)">${saldoUVR.toLocaleString('es-CO', { maximumFractionDigits: 4 })} UVR</strong></div>`
               : '';
