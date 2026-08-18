@@ -1,5 +1,6 @@
 const CFG = window.APP_CONFIG;
 const money = (n) => (Number(n) || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+const moneyUVR = (n) => (Number(n) || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 4, maximumFractionDigits: 4 });
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 function toast(msg, isError) {
@@ -264,7 +265,7 @@ async function loadHipotecas() {
     const uvrHist = uvrRes.data;
     const ultimaUVR = uvrHist.length ? uvrHist[uvrHist.length - 1] : null;
     uvrInfo.textContent = ultimaUVR
-      ? `Última cotización: ${money(ultimaUVR['Valor UVR'])} (${formatDate(ultimaUVR.Fecha)})`
+      ? `Última cotización: ${moneyUVR(ultimaUVR['Valor UVR'])} (${formatDate(ultimaUVR.Fecha)})`
       : 'Aún no has registrado ninguna cotización.';
 
     select.innerHTML = data.map((h) => `<option value="${h.ID}">${escapeHtml(h.Nombre)}</option>`).join('');
